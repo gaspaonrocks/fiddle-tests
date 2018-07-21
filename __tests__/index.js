@@ -4,6 +4,10 @@ import path from 'path';
 
 import { loadData, saveData } from '../module.js';
 
+const state = {
+  hello: 'world'
+};
+
 beforeEach(() => {
   // Creates an in-memory file system 
   mockFs({
@@ -16,11 +20,7 @@ describe('saveData method', () => {
     it('should throw error', () => {
       mockFs.restore()
 
-      const state = {
-        hello: 'world'
-      };
-
-      const error = () => saveData(state);
+      const error = () => saveData('/state', state);
 
       expect(error).toThrow();
     });
@@ -28,10 +28,6 @@ describe('saveData method', () => {
 
   describe('target folder exists', () => {
     it('should save the state', () => {
-      const state = {
-        hello: 'world'
-      };
-
       saveData('/state', state);
       const isFile = fs.lstatSync(path.resolve('/state/state.json')).isFile();
 
@@ -55,10 +51,6 @@ describe('loadData method', () => {
 
   describe('target folder exists', () => {
     it('should load state', () => {
-      const state = {
-        hello: 'world'
-      };
-
       saveData('/state', state);
       const actual = loadData('/state');
 
