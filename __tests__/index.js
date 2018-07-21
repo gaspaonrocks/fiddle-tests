@@ -4,11 +4,15 @@ import path from 'path';
 import { loadData, saveData } from '../module.js';
 
 describe('saveData method', () => {
-  describe('target folder doesn\'t exist', () => {
-    beforeAll(() => {
-      if (fs.lstatSync(path.resolve(__dirname, '../state')).isDirectory()) rimraf.sync(path.resolve(__dirname, '../state'));
-    });
+  beforeAll(() => {
+    if (fs.lstatSync(path.resolve(__dirname, '../state')).isDirectory()) rimraf.sync(path.resolve(__dirname, '../state'));
+  });
 
+  afterAll(() => {
+    if (fs.lstatSync(path.resolve(__dirname, '../state')).isDirectory()) rimraf.sync(path.resolve(__dirname, '../state'));
+  });
+
+  describe('target folder doesn\'t exist', () => {
     it('should throw error', () => {
       const state = {
         hello: 'world'
@@ -60,5 +64,5 @@ describe('loadData method', () => {
         hello: 'world'
       });
     });
-  })
-})
+  });
+});
