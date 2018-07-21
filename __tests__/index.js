@@ -1,17 +1,21 @@
 import fs from 'fs';
-import rimraf from 'rimraf';
+import mockFs from 'mock-fs';
 import path from 'path';
+
 import { loadData, saveData } from '../module.js';
+
+beforeEach(() => {
+  // Creates an in-memory file system 
+  mockFs({
+    '/state': {}
+  });
+});
 
 describe('saveData method', () => {
   describe('target folder doesn\'t exist', () => {
-    beforeAll(() => {
-      try {
-        if (fs.lstatSync(path.resolve(__dirname, '../state')).isDirectory()) rimraf.sync(path.resolve(__dirname, '../state'));
-      } catch (error) { }
-    });
-
     it('should throw error', () => {
+      mockFs.restore()
+
       const state = {
         hello: 'world'
       };
@@ -20,49 +24,49 @@ describe('saveData method', () => {
 
       expect(error).toThrow();
     });
+  });
 
+  describe('target folder exists', () => {
     it('should save the state', () => {
-      fs.mkdirSync(path.resolve(__dirname, '../state'));
-
       const state = {
         hello: 'world'
       };
 
-      saveData(state);
-      const isFile = fs.lstatSync(path.resolve(__dirname, '../state/state.json')).isFile();
+      saveData('/state', state);
+      const isFile = fs.lstatSync(path.resolve('/state/state.json')).isFile();
 
       expect(isFile).toEqual(true);
+
+      mockFs.restore()
     });
-  })
-})
+  });
+});
 
 describe('loadData method', () => {
-  beforeAll(() => {
-    try {
-      if (fs.lstatSync(path.resolve(__dirname, '../state')).isDirectory()) rimraf.sync(path.resolve(__dirname, '../state'));
-    } catch (error) { }
-  });
-
-  describe('target folder deosn\'t exist', () => {
+  describe('target folder doesn\'t exist', () => {
     it('should throw error', () => {
-      const error = () => loadData();
+      mockFs.restore();
+
+      const error = () => loadData('/state');
 
       expect(error).toThrow();
     });
+  });
 
+  describe('target folder exists', () => {
     it('should load state', () => {
-      fs.mkdirSync(path.resolve(__dirname, '../state'));
-
       const state = {
         hello: 'world'
       };
 
-      saveData(state);
-      const actual = loadData();
+      saveData('/state', state);
+      const actual = loadData('/state');
 
       expect(actual).toEqual({
         hello: 'world'
       });
+
+      mockFs.restore()
     });
   });
 });
