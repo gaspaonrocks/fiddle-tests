@@ -4,6 +4,7 @@
   "description": "small project to work on diverse things",
   "main": "index.js",
   "scripts": {
+    "gitty": "node ./gitty.js",
     "start": "babel-node --presets env ./index.js",
     "test": "jest",
     "test:watch": "jest --watch"
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
+    "lerna": "^3.15.0",
     "npm-check-updates": "^3.1.11"
   }
 }
