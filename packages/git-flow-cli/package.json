@@ -1,0 +1,37 @@
+{
+  "name": "git-flow-cli",
+  "version": "1.0.0",
+  "description": "a CLI in shell to git flow !",
+  "keywords": [
+    "cli",
+    "git",
+    "shell"
+  ],
+  "author": "Sacha GRASSO <sacha.grasso-ext@atinternet.com>",
+  "homepage": "https://github.com/gaspaonrocks/fiddle-tests#readme",
+  "license": "ISC",
+  "main": "src/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "http://bdxsvn001:8082/npm/AT_NPM"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaspaonrocks/fiddle-tests.git"
+  },
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/gaspaonrocks/fiddle-tests/issues"
+  },
+  "dependencies": {
+    "inquirer": "^6.4.0"
+  }
+}
