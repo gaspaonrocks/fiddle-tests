@@ -9,7 +9,7 @@ const readline = require('readline');
 /**
  * @todo map each choice with a specific git command and execute it
  */
-let choices = ['status', 'add', 'commit', 'branch', 'checkout', 'merge', 'rebase'];
+let choices = ['status', 'add', 'commit', 'branch', 'checkout', 'merge', 'rebase', 'log'];
 
 const forked = fork('./packages/git-flow-cli/src/fork.js');
 
@@ -27,26 +27,24 @@ process.stdin.on('keypress', (str, key) => {
     } else {
         process.stdout.write('\x1Bc');
         // console.log(key);
-        console.log("What do you want to do ?");
 
         if (key.name === 'up') {
-            forked.send(makeMyMessage(shiftArray(choices)));
+            forked.send({ message: "What do you want to do ?", data: makeMyMessage(shiftArray(choices)), execute: false });
         } else if (key.name === 'down') {
-            forked.send(makeMyMessage(unshiftArray(choices)));
+            forked.send({ message: "What do you want to do ?", data: makeMyMessage(unshiftArray(choices)), execute: false });
         } else if (key.name === 'escape') {
             process.stdout.write('\x1Bc');
             process.exit();
         } else if (key.name === 'return') {
             process.stdout.write('\x1Bc');
-            forked.send(`You selected ${choices[0]}`);
+            forked.send({ message: `You selected ${choices[0]}`, data: choices[0], execute: true });
         }
     }
 });
 
 const selectAction = () => {
     process.stdout.write('\x1Bc');
-    console.log("What do you want to do ?");
-    forked.send(makeMyMessage(choices));
+    forked.send({ message: "What do you want to do ?", data: makeMyMessage(choices) });
 }
 
 selectAction();
