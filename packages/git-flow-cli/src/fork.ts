@@ -17,7 +17,7 @@ const actionMapping = {
 
 const executeAction = (key) => exec(`git ${key}`, (err, stdout, stderr) => {
   if (err) {
-    console.error(`exec error: ${error}`);
+    console.error(`exec error: ${err}`);
     return;
   }
   if (stdout) console.log(stdout);

@@ -39,10 +39,4 @@ export function gitFlowCli() {
     });
 
     subproc.on('error', data => { if (data) console.error(data) });
-
-    // (error, stdout, stderr) => {
-    // if (error) throw error;
-    // 
-
-    // });
 }
