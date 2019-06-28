@@ -4,6 +4,7 @@ import {
     cleaningStuff,
     makeMyMessage,
 } from './utils';
+import { branch, checkout, log, status } from "./commands";
 import * as readline from 'readline';
 
 const forked = fork('./packages/git-flow-cli/src/fork.ts', ['-r', 'ts-node/register']);
@@ -24,55 +25,53 @@ process.stdin.setEncoding('utf8');
 process.stdin.setRawMode(true);
 
 const mapping = {
-    status: (key) => {
-        // console.log(key);
-
-        if (key.name === 'g') {
-            cleaner.cleanScreen();
-            selectAction();
-        };
-    },
-    select: (key) => {
-        /**
-         * @todo mapper des action spécifiques avec des touches spécifiques.
-         */
-        // console.log(key);
-
-        if (key.name === 'up') {
-            cleaner.cleanScreen();
-            forked.send({ message: "What do you want to do ?", data: makeMyMessage(choices, IndexManager.unshiftValue().getValue()), execute: false });
-        } else if (key.name === 'down') {
-            cleaner.cleanScreen();
-            forked.send({ message: "What do you want to do ?", data: makeMyMessage(choices, IndexManager.shiftValue().getValue()), execute: false });
-        } else if (key.name === 'return') {
-            statusSelect(IndexManager.getValue());
-        }
-    }
+    branch,
+    checkout,
+    log,
+    status,
 }
 
 const statusSelect = (index) => {
     cleaner.removeKeyPress();
     cleaner.cleanScreen();
-    forked.send({ message: `You selected ${choices[index]}`, data: choices[index], execute: true });
+    // forked.send({ message: `You selected ${choices[index]}`, data: choices[index], execute: true });
+    mapping[choices[index]]();
     process.stdin.on('keypress', (str, key) => {
         if ((key.ctrl && key.name === 'c') || key.name === 'escape') {
             cleaner.cleanScreen();
             cleaner.exitProc();
         } else {
-            mapping.status(key);
+            if (key.name === 'g') {
+                forked.send({ message: "", data: '', execute: false });
+                // cleaner.cleanScreen();
+                selectAction();
+            };
+
+            mapping[choices[index]](key);
         };
     });
 }
 
-const selectAction = () => {
+export const selectAction = () => {
     cleaner.removeKeyPress();
     cleaner.cleanScreen();
+
+    IndexManager.resetValue().setLimit(choices.length);
+
     process.stdin.on('keypress', (str, key) => {
         if ((key.ctrl && key.name === 'c') || key.name === 'escape') {
             cleaner.cleanScreen();
             cleaner.exitProc();
         } else {
-            mapping.select(key);
+            if (key.name === 'up') {
+                cleaner.cleanScreen();
+                forked.send({ message: "What do you want to do ?", data: makeMyMessage(choices, IndexManager.unshiftValue().getValue()), execute: false });
+            } else if (key.name === 'down') {
+                cleaner.cleanScreen();
+                forked.send({ message: "What do you want to do ?", data: makeMyMessage(choices, IndexManager.shiftValue().getValue()), execute: false });
+            } else if (key.name === 'return') {
+                statusSelect(IndexManager.getValue());
+            }
         }
     });
 

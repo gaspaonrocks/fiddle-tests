@@ -5,16 +5,6 @@ process.on('message', ({ message, data, execute }) => {
   execute ? executeAction(data) : console.log(data);
 });
 
-/**
- * @todo is it necessary to have it here ?
- */
-const actionMapping = {
-  status: "",
-  checkout: "",
-  branch: "",
-  log: "",
-};
-
 const executeAction = (key) => exec(`git ${key}`, (err, stdout, stderr) => {
   if (err) {
     console.error(`exec error: ${err}`);
